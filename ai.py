@@ -5,6 +5,7 @@ from movements import *
 from point import Point
 from copy import deepcopy
 
+
 # Strength for pieces on the board
 Points = {'Pawn': 10, 'Rook': 50, 'Bishop': 30, 'Knight': 30, 'Queen': 90, 'King': 900}
     
@@ -32,10 +33,10 @@ PIECES_NAMES = ['Pawn-1',
                 'Knight-2',
                 'Rook-2'
                 ]
+SYMBOLS = {'BPawn': '♟', 'WPawn': '♙', 'BKnight': '♞', 'WKnight':'♘', 'BBishop':'♝', 'WBishop':'♗', 'BRook':'♜', 'WRook':'♖', 'BKing':'♚', 'WKing':'♔', 'BQueen':'♛', 'WQueen':'♕'}
 BLACK = 'B' 
 WHITE = 'W'
 EMPTY = '.'
-TURN = WHITE
 
 class Piece:                   
     def __init__(self, name, pos, color): # ✅
@@ -56,7 +57,6 @@ class Piece:
         directions = PIECES_MOVING_DIRECTION[self.name]
         l = []
         for direction in directions:
-            # print(direction)
             moves_available = direction(board, self.pos, self.color)
             if moves_available:
                 l += moves_available
@@ -76,9 +76,7 @@ class Piece:
         """
         Representation of this class
         """
-        if self.color == WHITE:
-            return f'{self.name[0].upper()}'
-        return f'{self.name[0].lower()}'
+        return SYMBOLS[self.color + self.name]
 
     def getPiecePoints(self): # ✅
         """
@@ -127,16 +125,16 @@ def move(board, piece, new_pos): # ✅
     piece: Piece Class Object
     new_pos: Point class Object
     """
-    if new_pos in piece.actions(board):
-        if board[new_pos.x][new_pos.y] != EMPTY:
-            kill(board, board[new_pos.x][new_pos.y])
-        if board[new_pos.x][new_pos.y] == EMPTY:
-            board[piece.pos.x][piece.pos.y] = EMPTY
-            board[new_pos.x][new_pos.y] = piece
-            piece.pos.x = new_pos.x
-            piece.pos.y = new_pos.y
-    else:
-        print("Invalid Move")
+    x, y = piece.pos.x, piece.pos.y 
+    if board[new_pos.x][new_pos.y] != EMPTY:
+        kill(board, board[new_pos.x][new_pos.y])
+    if board[new_pos.x][new_pos.y] == EMPTY:
+        board[piece.pos.x][piece.pos.y] = EMPTY
+        board[new_pos.x][new_pos.y] = piece
+        piece.pos.x = new_pos.x
+        piece.pos.y = new_pos.y
+    if piece.pos.x == x and piece.pos.y == y:
+        print("Invalid move")
 
 
 def kill(board, piece): # ✅
@@ -149,15 +147,6 @@ def kill(board, piece): # ✅
     board[piece.pos.x][piece.pos.y] = EMPTY # Making the piece pos empty
     piece.alive = False
     # print("Done !")
-
-
-def player():
-    """
-    Returns player who has the next turn on a board.
-    """
-    if TURN == WHITE:
-        return BLACK
-    return WHITE
 
 
 def evaluation(board): # ✅

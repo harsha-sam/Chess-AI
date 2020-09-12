@@ -5,7 +5,7 @@ EMPTY = '.'
 def one_step_front(board, cur_pos:Point('x', 'y'), color):
     if 0 <= cur_pos.x + 1 <= 7:
         if board[cur_pos.x + 1][cur_pos.y] == EMPTY or board[cur_pos.x + 1][cur_pos.y].color != color:
-            return [Point(cur_pos.x + 1, cur_pos.y)]
+                return [Point(cur_pos.x + 1, cur_pos.y)]
 
 def one_step_back(board, cur_pos:Point('x', 'y'), color):
     if 0 <= cur_pos.x - 1 <= 7:
@@ -165,7 +165,6 @@ def one_step_diag_left_backward(board, cur_pos:Point('x', 'y'), color):
     if 0 <= x <= 7 and 0 <= y <= 7:
         if board[x][y] == EMPTY or board[x][y].color != color:
             return [Point(x, y)]
-    return []
 
 
 def diag_left_backward(board, cur_pos:Point('x', 'y'), color):
@@ -228,3 +227,25 @@ def L_back(board, cur_pos:Point('x', 'y'), color):
             if board[cur_pos.x - 2][cur_pos.y - 1] == EMPTY or board[cur_pos.x - 2][cur_pos.y - 1].color != color:
                 moves.append(Point(cur_pos.x - 2, cur_pos.y - 1))
     return moves
+
+
+# Special rules for pawns:
+def pawn_rules(board, cur_pos, color):
+    available_moves = []
+    if color == 'B':
+        if 0 <= cur_pos.x + 1 <= 7:
+            if board[cur_pos.x + 1][cur_pos.y] == EMPTY:
+                available_moves.append(Point(cur_pos.x + 1, cur_pos.y))
+            if 0 <= cur_pos.y + 1 <= 7 and board[cur_pos.x + 1][cur_pos.y + 1] != EMPTY and board[cur_pos.x + 1][cur_pos.y + 1].color != color:
+                available_moves.append(Point(cur_pos.x + 1, cur_pos.y + 1))
+            if 0 <= cur_pos.y - 1 <= 7 and board[cur_pos.x + 1][cur_pos.y - 1] != EMPTY and board[cur_pos.x + 1][cur_pos.y - 1].color != color:
+                available_moves.append(Point(cur_pos.x + 1, cur_pos.y - 1))
+    elif color == 'W':
+        if 0 <= cur_pos.x - 1 <= 7:
+            if board[cur_pos.x - 1][cur_pos.y] == EMPTY:
+                available_moves.append(Point(cur_pos.x - 1, cur_pos.y))
+            if 0 <= cur_pos.y + 1 <= 7 and board[cur_pos.x - 1][cur_pos.y + 1] != EMPTY and board[cur_pos.x - 1][cur_pos.y + 1].color != color:
+                available_moves.append(Point(cur_pos.x - 1, cur_pos.y + 1))
+            if 0 <= cur_pos.y - 1 <= 7 and board[cur_pos.x - 1][cur_pos.y - 1] != EMPTY and board[cur_pos.x - 1][cur_pos.y - 1].color != color:
+                available_moves.append(Point(cur_pos.x - 1, cur_pos.y - 1))
+    return available_moves

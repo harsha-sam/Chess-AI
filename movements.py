@@ -232,9 +232,12 @@ def L_back(board, cur_pos:Point('x', 'y'), color):
 
 
 # Special rules for pawns:
-def pawn_rules(board, cur_pos, color):
+def pawn_rules(board, cur_pos, color, init):
     available_moves = []
     if color == 'B':
+        if not init:
+            if board[cur_pos.x + 2][cur_pos.y] == EMPTY:
+                available_moves.append(Point(cur_pos.x + 2, cur_pos.y))
         if 0 <= cur_pos.x + 1 <= 7:
             if board[cur_pos.x + 1][cur_pos.y] == EMPTY:
                 available_moves.append(Point(cur_pos.x + 1, cur_pos.y))
@@ -243,6 +246,9 @@ def pawn_rules(board, cur_pos, color):
             if 0 <= cur_pos.y - 1 <= 7 and board[cur_pos.x + 1][cur_pos.y - 1] != EMPTY and board[cur_pos.x + 1][cur_pos.y - 1].color != color:
                 available_moves.append(Point(cur_pos.x + 1, cur_pos.y - 1))
     elif color == 'W':
+        if not init:
+            if board[cur_pos.x - 2][cur_pos.y] == EMPTY:
+                available_moves.append(Point(cur_pos.x - 2, cur_pos.y))
         if 0 <= cur_pos.x - 1 <= 7:
             if board[cur_pos.x - 1][cur_pos.y] == EMPTY:
                 available_moves.append(Point(cur_pos.x - 1, cur_pos.y))

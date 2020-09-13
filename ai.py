@@ -48,19 +48,24 @@ class Piece:
         self.color = color
         self.name = name
         self.pos = Point(pos[0], pos[1])
+        self.init = False
         self.alive = True
 
     def actions(self, board): # ✅
         """
         Returns set of all possible actions for the piece available on the board.
         """
-        directions = PIECES_MOVING_DIRECTION[self.name]
-        l = []
-        for direction in directions:
-            moves_available = direction(board, self.pos, self.color)
-            if moves_available:
-                l += moves_available
-        return l
+        if self.alive:
+            directions = PIECES_MOVING_DIRECTION[self.name]
+            l = []
+            for direction in directions:
+                if direction == pawn_rules:
+                    moves_available = pawn_rules(board, self.pos, self.color, self.init)
+                else:
+                    moves_available = direction(board, self.pos, self.color)
+                if moves_available:
+                    l += moves_available
+            return l
 
     def result(self, board, action):
         """
@@ -135,7 +140,7 @@ def move(board, piece, new_pos): # ✅
         piece.pos.y = new_pos.y
     if piece.pos.x == x and piece.pos.y == y:
         print("Invalid move")
-
+    piece.init = True
 
 def kill(board, piece): # ✅
     """

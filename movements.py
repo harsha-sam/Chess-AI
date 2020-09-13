@@ -236,7 +236,7 @@ def pawn_rules(board, cur_pos, color, init):
     available_moves = []
     if color == 'B':
         if not init:
-            if board[cur_pos.x + 2][cur_pos.y] == EMPTY:
+            if board[cur_pos.x + 1][cur_pos.y] == EMPTY and board[cur_pos.x + 2][cur_pos.y] == EMPTY:
                 available_moves.append(Point(cur_pos.x + 2, cur_pos.y))
         if 0 <= cur_pos.x + 1 <= 7:
             if board[cur_pos.x + 1][cur_pos.y] == EMPTY:
@@ -247,7 +247,7 @@ def pawn_rules(board, cur_pos, color, init):
                 available_moves.append(Point(cur_pos.x + 1, cur_pos.y - 1))
     elif color == 'W':
         if not init:
-            if board[cur_pos.x - 2][cur_pos.y] == EMPTY:
+            if board[cur_pos.x - 1][cur_pos.y] == EMPTY and board[cur_pos.x - 2][cur_pos.y] == EMPTY:
                 available_moves.append(Point(cur_pos.x - 2, cur_pos.y))
         if 0 <= cur_pos.x - 1 <= 7:
             if board[cur_pos.x - 1][cur_pos.y] == EMPTY:

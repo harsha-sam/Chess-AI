@@ -1,4 +1,4 @@
-from ai import *
+from game import *
 import math
 
 def minimize(board, depth, alpha, beta):
@@ -56,17 +56,32 @@ def main():
     while n < 100:
         if n % 2 == 0:
             print(f"Your Turn! ({PLAYER})")
-            piece = input("Enter the piece name you wanna move:")
+            while True:
+                piece = input("Enter the piece name you wanna move:")
+                if piece in PLAYER_PIECES:
+                    if not PLAYER_PIECES[piece].actions(BOARD):
+                        print("Moves are not available for this piece")
+                    else:
+                        break
+                else:
+                    print("Invalid name!")
+                print("Available Pieces are:")
+                for key, obj in PLAYER_PIECES.items():
+                    if obj.alive:
+                        print(f"{key} at {obj.pos}")
             choice = PLAYER_PIECES[piece] 
-            print(f"Available moves for {choice.name}: {choice.actions(BOARD)}")
-            x, y = map(int, input("Enter your move:").split())
-            move(BOARD, choice, Point(x, y))
+            while True:
+                print(f"Available moves for {choice.name}: {choice.actions(BOARD)}")
+                x, y = map(int, input("Enter your move:").split())
+                if move(BOARD, choice, Point(x, y)):
+                    break
+                print("Invalid move!")
+            display(BOARD)
+            print(f"Evaluation:{evaluation(BOARD)}")
             win_check = winner(BOARD)
             if win_check:
                 print(f"{win_check} won!")
                 break
-            display(BOARD)
-            print(f"Evaluation:{evaluation(BOARD)}")
         else:
             print(f"Computer's Turn ! ({ENEMY})")
             if ENEMY == BLACK:
@@ -75,12 +90,12 @@ def main():
             elif ENEMY == WHITE:
                 pc, mv, _ = maximize(BOARD, 3, -math.inf, math.inf)
                 move(BOARD, pc, mv)
+            display(BOARD)
+            print(f"Evaluation:{evaluation(BOARD)}")
             win_check = winner(BOARD)
             if win_check:
                 print(f"{win_check} won!")
                 break
-            display(BOARD)
-            print(f"Evaluation:{evaluation(BOARD)}")
         n += 1
 
 if __name__ == "__main__":

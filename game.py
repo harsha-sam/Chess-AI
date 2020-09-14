@@ -39,19 +39,25 @@ WHITE = 'W'
 EMPTY = '.'
 
 class Piece:                   
-    def __init__(self, name, pos, color): # ✅
+    def __init__(self, name, pos, color): 
         """
-        name: Name of the piece ('King', 'Queen', 'Bishop', 'Knight', 'Rook')
+        name: Name of the piece ('King', 'Queen', 'Bishop-1', 'Knight-1', 'Rook-2')
         pos: x, y where x denotes the row position and y denotes the column 
         color: 'B' or 'W' which denotes Black and White respectively
         """
-        self.color = color
+        self.color = color 
         self.name = name
+        self.num = None
+        if name != 'King' and name != 'Queen':
+            # num contains the number of piece 1 for Rook-1, 2 for Rook-2....
+            self.name = name[:len(name) - 2]
+            self.num = name[len(name)-1]
         self.pos = Point(pos[0], pos[1])
+        # Init is changed to True, when the piece is initialized (Useful for two-steps in pawn initial move)
         self.init = False
         self.alive = True
 
-    def actions(self, board): # ✅
+    def actions(self, board): 
         """
         Returns set of all possible actions for the piece available on the board.
         """
@@ -77,13 +83,13 @@ class Piece:
         move(new_board, deepcopy(self), action)
         return new_board
 
-    def __repr__(self): # ✅
+    def __repr__(self): 
         """
         Representation of this class
         """
         return SYMBOLS[self.color + self.name]
 
-    def getPiecePoints(self): # ✅
+    def getPiecePoints(self): 
         """
         Returns strength point for the piece
             • Positive strength if color is white
@@ -92,21 +98,23 @@ class Piece:
         return Points[self.name] if self.color == WHITE else - Points[self.name]
 
 
-def game_init(player): # ✅
+def game_init(player): 
+    """
+    Initializes 8 * 8 board 
+    """
     board = [[EMPTY for _ in range(8)] for _ in range(8)]
     if player == WHITE:
         enemy = BLACK
     else:
         enemy = WHITE
+    # names are keys and piece object are values for below dictonaries
+    # names are represented as Pawn-1, Rook-1, etc
     player_pieces = {}
     enemy_pieces = {}
 
     def pieces_insert(board, row, pieces, color):
         for i in range(8):
-            name = pieces[i]
-            if name != 'King' and name != 'Queen':
-                name = name[:len(name) - 2]
-            obj = Piece(name, (row, i), color)
+            obj = Piece(pieces[i], (row, i), color)
             board[row][i] = obj
             if color ==  player:
                 player_pieces[pieces[i]] = obj
@@ -124,7 +132,7 @@ def game_init(player): # ✅
     return (board, player, enemy, player_pieces, enemy_pieces)
 
 
-def move(board, piece, new_pos): # ✅
+def move(board, piece, new_pos): 
     """
     Moves the piece to new position in the board, if move is valid
     piece: Piece Class Object
@@ -145,19 +153,16 @@ def move(board, piece, new_pos): # ✅
         return False
     return True
 
-def kill(board, piece): # ✅
+def kill(board, piece): 
     """
     Kills the piece, and frees the position in the board
-    board: board attribute from Game class
     piece: Piece Class Object
     """
-    # print(f"Killing {piece.name} at {piece.pos}")
     board[piece.pos.x][piece.pos.y] = EMPTY # Making the piece pos empty
     piece.alive = False
-    # print("Done !")
 
 
-def evaluation(board): # ✅
+def evaluation(board): 
     """
     Returns the sum of all the strength points of the pieces in the board
     """
@@ -169,7 +174,11 @@ def evaluation(board): # ✅
     return val
 
 
-def all_available_black_moves(board): # ✅
+def all_available_black_moves(board): 
+    """
+    Returns available moves for all black pieces in the form of list of tuples,
+    where each tuple contains the piece name and the moves available for the piece.
+    """
     res = []
     for i in range(8):
         for j in range(8):
@@ -179,7 +188,11 @@ def all_available_black_moves(board): # ✅
     return res         
 
 
-def all_available_white_moves(board): # ✅
+def all_available_white_moves(board): 
+    """
+    Returns available moves for all white pieces in the form of list of tuples,
+    where each tuple contains the piece name and the moves available for the piece.
+    """
     res = []
     for i in range(8):
         for j in range(8):
@@ -189,7 +202,10 @@ def all_available_white_moves(board): # ✅
     return res        
 
 
-def terminal(board): # ✅
+def terminal(board): 
+    """
+    Returns true if any king is dead
+    """
     count = 0
     for i in range(8):
         for j in range(8):
@@ -198,7 +214,10 @@ def terminal(board): # ✅
     return count != 2
 
 
-def winner(board): # ✅
+def winner(board): 
+    """
+    Returns the winner of the game
+    """
     if terminal(board):
         for i in range(8):
             for j in range(8):
@@ -206,11 +225,14 @@ def winner(board): # ✅
                         return board[i][j].color
     
 
-def display(state): # ✅
-    print("-"*30)
+def display(state): 
+    """
+    Prints the board
+    """
+    print("-"*40)
     for row in state:
         for ele in row:
             print(ele, end=' ')
         print()
-    print("-"*30)
+    print("-"*40)
     

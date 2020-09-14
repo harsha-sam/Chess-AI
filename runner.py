@@ -1,6 +1,7 @@
 from game import *
 import math
 
+# Black always tries to minimize the score
 def minimize(board, depth, alpha, beta):
     if terminal(board) or depth == 0:
         return None, None, evaluation(board)
@@ -20,7 +21,7 @@ def minimize(board, depth, alpha, beta):
                 break
     return best_choice, best_move, minim
 
-
+# White always tries to maximize the score
 def maximize(board, depth, alpha, beta):
     if terminal(board) or depth == 0:
         return None, None, evaluation(board)
@@ -65,15 +66,21 @@ def main():
                         break
                 else:
                     print("Invalid name!")
-                print("Available Pieces are:")
-                for key, obj in PLAYER_PIECES.items():
-                    if obj.alive:
-                        print(f"{key} at {obj.pos}")
+                    print("Available Pieces are:")
+                    for key, obj in PLAYER_PIECES.items():
+                        if obj.alive:
+                            print(f"{key} at {obj.pos}")
             choice = PLAYER_PIECES[piece] 
             while True:
                 print(f"Available moves for {choice.name}: {choice.actions(BOARD)}")
                 x, y = map(int, input("Enter your move:").split())
-                if move(BOARD, choice, Point(x, y)):
+                mv = Point(x, y)
+                flag = move(BOARD, choice, mv)
+                if flag:
+                    if choice.num:
+                        print(f"{choice.name + '-' +choice.num} has moved from {choice.pos} to {mv}")
+                    else:
+                        print(f"{choice.name} has moved from {choice.pos} to {mv}")
                     break
                 print("Invalid move!")
             display(BOARD)
@@ -86,9 +93,17 @@ def main():
             print(f"Computer's Turn ! ({ENEMY})")
             if ENEMY == BLACK:
                 pc, mv, _ = minimize(BOARD, 3, -math.inf, math.inf)
+                if pc.num:
+                    print(f"{pc.name + '-' + pc.num} has moved from {pc.pos} to {mv}")
+                else:
+                    print(f"{pc.name} has moved from {pc.pos} to {mv}")
                 move(BOARD, pc, mv)
             elif ENEMY == WHITE:
                 pc, mv, _ = maximize(BOARD, 3, -math.inf, math.inf)
+                if pc.num:
+                    print(f"{pc.name + '-' + pc.num} has moved from {pc.pos} to {mv}")
+                else:
+                    print(f"{pc.name} has moved from {pc.pos} to {mv}")
                 move(BOARD, pc, mv)
             display(BOARD)
             print(f"Evaluation:{evaluation(BOARD)}")
@@ -97,6 +112,7 @@ def main():
                 print(f"{win_check} won!")
                 break
         n += 1
+
 
 if __name__ == "__main__":
     main()

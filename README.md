@@ -30,6 +30,5 @@ Such moves need not be evaluated further.
 When applied to a standard minimax tree, it returns the same move as minimax would, but prunes away branches that cannot possibly influence the final decision.
 
 ## Known Bugs
-* Checkmate condition
-* Game-Draw condiion
+* Checkmate and Stalemate condition
 * Special Moves (Promotion, Castling, Enpassant)

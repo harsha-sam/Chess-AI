@@ -2,7 +2,7 @@
 Implemented an AI which plays chess optimally using **Minimax** algorithm and **Alpha-beta pruning** for optimization.
 
 ## Requirements
-* Python 3
+* Python 3.x
 
 ## Instructions
 * Run **runner.py** file

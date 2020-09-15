@@ -28,3 +28,8 @@ A way to optimize Minimax, Alpha-Beta Pruning skips some of the recursive comput
 It stops evaluating a move when at least one possibility has been found that proves the move to be worse than a previously examined move. 
 Such moves need not be evaluated further. 
 When applied to a standard minimax tree, it returns the same move as minimax would, but prunes away branches that cannot possibly influence the final decision.
+
+## Known Bugs
+* Checkmate condition
+* Game-Draw condiion
+* Special Moves (Promotion, Castling, Enpassant)
